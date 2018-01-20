@@ -1,0 +1,67 @@
+diff -ru src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java
+--- src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java	2018-01-19 20:30:39.812725800 -0800
++++ src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java	2018-01-19 20:29:55.556500700 -0800
+@@ -113,6 +113,9 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++// BaseMod imports
++import basemod.BaseMod;
++
+ public class CardCrawlGame
+ implements ApplicationListener {
+     public static String VERSION_NUM = "[EARLY_ACCESS_012] (01-18-2018)";
+@@ -252,6 +255,9 @@
+             if (Settings.isDebug) {
+                 CardCrawlGame.splashScreen.isDone = true;
+             }
++            
++            // BaseMod hook
++            BaseMod.publishPostInitialize();
+         }
+         catch (Exception e) {
+             ExceptionHandler.handleException(e, logger);
+@@ -287,9 +293,9 @@
+     public void migrateHelper(String file) {
+         Preferences p = Gdx.app.getPreferences(file);
+         Prefs p2 = SaveHelper.getPrefs(file);
+-        Map map = p.get();
++        Map<?,?> map = p.get();
+         for (Map.Entry c : map.entrySet()) {
+-            p2.putString(c.getKey(), p.getString(c.getKey()));
++            p2.putString((String)c.getKey(), p.getString((String)c.getKey()));
+         }
+         p2.flush();
+     }
+@@ -372,6 +378,9 @@
+                 this.sb.draw(ImageMaster.WHITE_SQUARE_IMG, (float)Settings.WIDTH, 0.0f, (float)Settings.VERT_LETTERBOX_AMT, (float)Settings.HEIGHT);
+             }
+             this.sb.end();
++            
++            // BaseMod hook
++            BaseMod.publishPostRender();
+         }
+         catch (Exception e) {
+             ExceptionHandler.handleException(e, logger);
+@@ -505,7 +514,10 @@
+         mysteryMachine = 0;
+     }
+ 
+-    public void update() {
++    public void update() {    
++        // BaseMod hook
++        BaseMod.publishPreUpdate();
++        
+         cursor.update();
+         screenShake.update(viewport);
+         if (mode != GameMode.SPLASH) {
+@@ -656,6 +668,9 @@
+         if (Settings.isInfo) {
+             this.fpsLogger.log();
+         }
++        
++        // BaseMod hook
++        BaseMod.publishPostUpdate();
+     }
+ 
+     private void loadPostCombat(SaveFile saveFile) {
