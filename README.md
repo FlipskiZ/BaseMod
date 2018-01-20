@@ -21,3 +21,7 @@ BaseMod provides a number of hooks and a console.
 ## Changelog ##
 #### v1.0.0 ####
 * Initial release
+
+#### v1.0.1 ####
+* Scale console by Settings.scale
+* Prevent game hotkeys from activating while console is visible

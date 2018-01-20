@@ -2,6 +2,7 @@ package basemod;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import java.awt.event.KeyEvent;
 
 public class ConsoleInputProcessor implements InputProcessor {
     @Override
@@ -12,6 +13,7 @@ public class ConsoleInputProcessor implements InputProcessor {
                 return true;
             }
             case Keys.BACKSPACE: {
+                DevConsole.backspaceWait = 0;
                 DevConsole.backspace = true;
                 return true;
             }
@@ -33,7 +35,15 @@ public class ConsoleInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyTyped(char character) {
-        if (character == '`') return false; 
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(character);
+        
+        boolean badBlock = (block == null || block == Character.UnicodeBlock.SPECIALS);
+        boolean isToggle = (character == DevConsole.toggleKey);
+        boolean isControl = (Character.isISOControl(character) || character == KeyEvent.CHAR_UNDEFINED);
+        if (badBlock || isToggle || isControl) {
+            return false; 
+        }
+        
         DevConsole.currentText += character;
         return true;
     }

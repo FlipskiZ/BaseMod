@@ -65,3 +65,120 @@ diff -ru src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java src/main/j
      }
  
      private void loadPostCombat(SaveFile saveFile) {
+diff -ru src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java
+--- src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java	2018-01-19 20:30:45.726395900 -0800
++++ src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java	2018-01-19 21:16:48.864194100 -0800
+@@ -32,6 +32,9 @@
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ 
++// BaseMod imports
++import basemod.DevConsole;
++
+ public class EndTurnButton {
+     private static final TutorialStrings tutorialStrings = CardCrawlGame.languagePack.getTutorialString("End Turn Tip");
+     public static final String[] MSG = EndTurnButton.tutorialStrings.TEXT;
+@@ -91,7 +94,9 @@
+                 }
+             }
+         }
+-        if (this.hitbox.clicked || Gdx.input.isKeyJustPressed(33) && !this.isDisabled && this.enabled) {
++        
++        // BaseMod modification
++        if (this.hitbox.clicked || (!DevConsole.visible && Gdx.input.isKeyJustPressed(33)) && !this.isDisabled && this.enabled) {
+             this.hitbox.clicked = false;
+             if (!this.isDisabled && !AbstractDungeon.isScreenUp) {
+                 this.disable(true);
+diff -ru src/main/java/com/megacrit/cardcrawl/ui/panels/DiscardPilePanel.java src/main/java/com/megacrit/cardcrawl/ui/panels/DiscardPilePanel.java
+--- src/main/java/com/megacrit/cardcrawl/ui/panels/DiscardPilePanel.java	2018-01-19 20:30:45.853517300 -0800
++++ src/main/java/com/megacrit/cardcrawl/ui/panels/DiscardPilePanel.java	2018-01-19 21:27:37.917842600 -0800
+@@ -36,6 +36,9 @@
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ 
++// BaseMod imports
++import basemod.DevConsole;
++
+ public class DiscardPilePanel
+ extends AbstractPanel {
+     private static final TutorialStrings tutorialStrings = CardCrawlGame.languagePack.getTutorialString("Discard Tip");
+@@ -89,12 +92,14 @@
+             if (InputHelper.justClickedLeft && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.DISCARD_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
+                 this.openDiscardPile();
+             }
+-        } else if (Gdx.input.isKeyJustPressed(47) && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.GAME_DECK_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
++        // BaseMod modification
++        } else if (!DevConsole.visible && Gdx.input.isKeyJustPressed(47) && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.GAME_DECK_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
+             this.openDiscardPile();
+             return;
+         }
+         if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.DISCARD_VIEW) {
+-            if (this.bannerHitbox.hovered && InputHelper.justClickedLeft || Gdx.input.isKeyJustPressed(47)) {
++            // BaseMod modification
++            if (this.bannerHitbox.hovered && InputHelper.justClickedLeft || (!DevConsole.visible && Gdx.input.isKeyJustPressed(47))) {
+                 this.hitbox.hovered = false;
+                 this.bannerHitbox.hovered = false;
+                 InputHelper.justClickedLeft = false;
+diff -ru src/main/java/com/megacrit/cardcrawl/ui/panels/DrawPilePanel.java src/main/java/com/megacrit/cardcrawl/ui/panels/DrawPilePanel.java
+--- src/main/java/com/megacrit/cardcrawl/ui/panels/DrawPilePanel.java	2018-01-19 20:30:45.866530600 -0800
++++ src/main/java/com/megacrit/cardcrawl/ui/panels/DrawPilePanel.java	2018-01-19 21:28:25.853573500 -0800
+@@ -39,6 +39,9 @@
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ 
++// BaseMod imports
++import basemod.DevConsole;
++
+ public class DrawPilePanel
+ extends AbstractPanel {
+     private static final TutorialStrings tutorialStrings = CardCrawlGame.languagePack.getTutorialString("Draw Tip");
+@@ -91,12 +94,14 @@
+             if (InputHelper.justClickedLeft && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.GAME_DECK_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
+                 this.openDrawPile();
+             }
+-        } else if (Gdx.input.isKeyJustPressed(29) && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.GAME_DECK_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
++        // BaseMod modification
++        } else if (!DevConsole.visible && Gdx.input.isKeyJustPressed(29) && AbstractDungeon.getMonsters() != null && !AbstractDungeon.isScreenUp && AbstractDungeon.screen != AbstractDungeon.CurrentScreen.GAME_DECK_VIEW && !AbstractDungeon.getMonsters().areMonstersDead()) {
+             this.openDrawPile();
+             return;
+         }
+         if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.GAME_DECK_VIEW) {
+-            if (this.bannerHitbox.hovered && InputHelper.justClickedLeft || Gdx.input.isKeyJustPressed(29)) {
++            // BaseMod modification
++            if (this.bannerHitbox.hovered && InputHelper.justClickedLeft || (!DevConsole.visible && Gdx.input.isKeyJustPressed(29))) {
+                 this.hitbox.hovered = false;
+                 this.bannerHitbox.hovered = false;
+                 InputHelper.justClickedLeft = false;
+diff -ru src/main/java/com/megacrit/cardcrawl/ui/panels/TopPanel.java src/main/java/com/megacrit/cardcrawl/ui/panels/TopPanel.java
+--- src/main/java/com/megacrit/cardcrawl/ui/panels/TopPanel.java	2018-01-19 20:30:45.961622700 -0800
++++ src/main/java/com/megacrit/cardcrawl/ui/panels/TopPanel.java	2018-01-19 21:41:05.589296700 -0800
+@@ -45,6 +45,9 @@
+ import com.megacrit.cardcrawl.ui.panels.PotionPopUp;
+ import java.util.ArrayList;
+ 
++// BaseMod imports
++import basemod.DevConsole;
++    
+ public class TopPanel {
+     private static final TutorialStrings tutorialStrings = CardCrawlGame.languagePack.getTutorialString("Top Panel Tips");
+     public static final String[] MSG = TopPanel.tutorialStrings.TEXT;
+@@ -324,7 +327,8 @@
+             this.deckButtonDisabled = true;
+             this.deckHb.hovered = false;
+         }
+-        if (this.deckHb.hovered && InputHelper.justClickedLeft || Gdx.input.isKeyJustPressed(32)) {
++        // BaseMod modification
++        if (this.deckHb.hovered && InputHelper.justClickedLeft || (!DevConsole.visible && Gdx.input.isKeyJustPressed(32))) {
+             if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.COMBAT_REWARD) {
+                 AbstractDungeon.closeCurrentScreen();
+                 AbstractDungeon.deckViewScreen.open();
+@@ -383,7 +387,8 @@
+             this.mapButtonDisabled = true;
+             this.mapHb.hovered = false;
+         }
+-        if (this.mapHb.hovered && InputHelper.justClickedLeft || Gdx.input.isKeyJustPressed(41)) {
++        // BaseMod modification
++        if (this.mapHb.hovered && InputHelper.justClickedLeft || (!DevConsole.visible && Gdx.input.isKeyJustPressed(41))) {
+             if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.MAP && !AbstractDungeon.dungeonMapScreen.dismissable) {
+                 CardCrawlGame.sound.play("CARD_REJECT");
+             } else if (!AbstractDungeon.isScreenUp) {

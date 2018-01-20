@@ -14,8 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.megacrit.cardcrawl.core.Settings;
 
 public class DevConsole implements PostInitializeSubscriber, PostRenderSubscriber, PostUpdateSubscriber {    
-    private static final float CONSOLE_X = 50.0f;
-    private static final float CONSOLE_Y = 50.0f;
+    private static final float CONSOLE_X = 75.0f;
+    private static final float CONSOLE_Y = 75.0f;
     private static final float CONSOLE_W = 800.0f;
     private static final float CONSOLE_H = 40.0f;
     private static final float CONSOLE_PAD_X = 15.0f;
@@ -64,7 +64,7 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
         
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/FantasqueSansMono/FantasqueSansMono-Regular.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = CONSOLE_TEXT_SIZE;
+        parameter.size = (int) (CONSOLE_TEXT_SIZE * Settings.scale);
         consoleFont = generator.generateFont(parameter);
         generator.dispose();
     }
@@ -74,12 +74,15 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
             ShapeRenderer consoleBackground = new ShapeRenderer();
             consoleBackground.begin(ShapeType.Filled);
             consoleBackground.setColor(consoleColor);
-            consoleBackground.rect(CONSOLE_X, CONSOLE_Y, CONSOLE_W, CONSOLE_H);
+            consoleBackground.rect(CONSOLE_X, CONSOLE_Y, (CONSOLE_W * Settings.scale), (CONSOLE_H * Settings.scale));
             consoleBackground.end();
+            
+            float x = (CONSOLE_X + (CONSOLE_PAD_X * Settings.scale));
+            float y = (CONSOLE_Y + (float) Math.floor(CONSOLE_TEXT_SIZE * Settings.scale));
             
             SpriteBatch consoleTextBatch = new SpriteBatch();
             consoleTextBatch.begin();
-            consoleFont.draw(consoleTextBatch, currentText, (CONSOLE_X + CONSOLE_PAD_X), (CONSOLE_Y + CONSOLE_TEXT_SIZE));
+            consoleFont.draw(consoleTextBatch, currentText, x, y);
             consoleTextBatch.end();
         }
     }
