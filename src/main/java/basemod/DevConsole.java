@@ -49,13 +49,13 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
         
         switch (tokens[0]) {
             case "test": {
-                cmdGoTo(tokens);
+                cmdTest(tokens);
                 break;
             }
         }
     }
     
-    private static void cmdGoTo(String[] tokens) {
+    private static void cmdTest(String[] tokens) {
         currentText = "TEST TEST TEST";
     }
     
