@@ -24,8 +24,8 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 ## For Modders ##
 ### Hooks ###
 #### Subscription handling ####
-* `BaseMod.subscribeTo...()`
-* `BaseMod.unsubscribeFrom...()`
+* `BaseMod.subscribeTo...(this)`
+* `BaseMod.unsubscribeFrom...(this)`
 
 #### Subscriptions ####
 Implement the appropriate interface (ex. `basemod.interfaces.PostInitializeSubscription`)
