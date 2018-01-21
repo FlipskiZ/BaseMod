@@ -16,11 +16,10 @@ BaseMod provides a number of hooks and a console.
 1. Copy `target/BaseMod.jar` to your ModTheSpire mods directory.
 
 ## Console ##
-Default hotkey is '`', can be changed from BaseMod's settings screen.
-
-`info` toggle Settings.isInfo
-`relic [id]` generate relic
-`relic r [id]` lose relic
+Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
+* `info` toggle Settings.isInfo
+* `relic [id]` generate relic
+* `relic r [id]` lose relic
 
 ## For Modders ##
 ### Hooks ###
