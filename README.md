@@ -28,7 +28,7 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 * `BaseMod.unsubscribeFrom...()`
 
 #### Subscriptions ####
-Implement the appropriate interface (ex. `PostInitializeSubscription`)
+Implement the appropriate interface (ex. `basemod.interfaces.PostInitializeSubscription`)
 * `receivePostInitialize()` - One time only, at the end of `CardCrawlGame.initialize()`
 * `receiveRender(SpriteBatch)` - Under tips and the cursor, above everything else
 * `receivePostRender(SpriteBatch)` - Above everything
@@ -37,7 +37,7 @@ Implement the appropriate interface (ex. `PostInitializeSubscription`)
 
 ### Mod Badges ###
 Currently only has full support for the badges themselves. Clicking any will open the BaseMod settings page for now.
-* BaseMod.registerModBadge(Texture texture, String modName, String author, String description)
+* `BaseMod.registerModBadge(Texture texture, String modName, String author, String description)`
 
 ## Changelog ##
 #### v1.0.0 ####
