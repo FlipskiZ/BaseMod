@@ -24,16 +24,16 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 ## For Modders ##
 ### Hooks ###
 #### Subscription handling ####
-* BaseMod.subscribeTo...()
-* BaseMod.unsubscribeFrom...()
+* `BaseMod.subscribeTo...()`
+* `BaseMod.unsubscribeFrom...()`
 
 #### Subscriptions ####
 Implement the appropriate interface (ex. `PostInitializeSubscription`)
-* receivePostInitialize() - One time only, at the end of `CardCrawlGame.initialize()`
-* receiveRender(SpriteBatch) - Under tips and the cursor, above everything else
-* receivePostRender(SpriteBatch) - Above everything
-* receivePreUpdate() - Immediately after input is handled
-* receivePostUpdate() - Immediately before input is disposed
+* `receivePostInitialize()` - One time only, at the end of `CardCrawlGame.initialize()`
+* `receiveRender(SpriteBatch)` - Under tips and the cursor, above everything else
+* `receivePostRender(SpriteBatch)` - Above everything
+* `receivePreUpdate()` - Immediately after input is handled
+* `receivePostUpdate()` - Immediately before input is disposed
 
 ### Mod Badges ###
 Currently only has full support for the badges themselves. Clicking any will open the BaseMod settings page for now.
