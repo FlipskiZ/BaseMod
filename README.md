@@ -51,7 +51,7 @@ Currently only has full support for the badges themselves. Clicking any will ope
 * Add mod badges
 * Add initial support for mod settings screens
 * Add `relic` console command
-* Add option to change console keybind to BaseMod settings screen
+* Add option to change console keybind on BaseMod settings screen
 
 #### v1.1.1 #####
 * Scale mod badges by Settings.scale
