@@ -28,7 +28,7 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 * BaseMod.unsubscribeFrom...()
 
 #### Subscriptions ####
-Implement the appropriate interface (ex. `PostInitializeSubscribe`)
+Implement the appropriate interface (ex. `PostInitializeSubscription`)
 * receivePostInitialize() - One time only, at the end of `CardCrawlGame.initialize()`
 * receiveRender(SpriteBatch) - Under tips and the cursor, above everything else
 * receivePostRender(SpriteBatch) - Above everything
