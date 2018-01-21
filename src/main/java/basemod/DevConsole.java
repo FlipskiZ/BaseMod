@@ -12,6 +12,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.*;
+import com.megacrit.cardcrawl.relics.AbstractRelic;
+import java.util.Arrays;
 
 public class DevConsole implements PostInitializeSubscriber, PostRenderSubscriber, PostUpdateSubscriber {    
     private static final float CONSOLE_X = 75.0f;
@@ -20,11 +24,12 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
     private static final float CONSOLE_H = 40.0f;
     private static final float CONSOLE_PAD_X = 15.0f;
     private static final int CONSOLE_TEXT_SIZE = 30;
-    private static final int BACKSPACE_INTERVAL = 3;
+    private static final int BACKSPACE_INTERVAL = 4;
     
     private static BitmapFont consoleFont = null;
     private static Color consoleColor = Color.BLACK;
     private static InputProcessor consoleInputProcessor; 
+    private static InputProcessor otherInputProcessor = null;
     
     public static boolean backspace = false;
     public static boolean visible = false;
@@ -44,24 +49,47 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
         
         if (tokens.length < 1) return;
         for (int i = 0; i < tokens.length; i++) {
-            tokens[i] = tokens[i].trim().toLowerCase();
+            tokens[i] = tokens[i].trim();
         }
         
-        switch (tokens[0]) {
-            case "test": {
-                cmdTest(tokens);
+        switch (tokens[0].toLowerCase()) {
+            case "relic": {
+                cmdRelic(tokens);
+                break;
+            }
+            case "info": {
+                Settings.isInfo = !Settings.isInfo;
+                break;
+            }
+            default: {
+                // TODO: Implement command hook
                 break;
             }
         }
     }
     
-    private static void cmdTest(String[] tokens) {
-        currentText = "TEST TEST TEST";
+    private static void cmdRelic(String[] tokens) {
+        if (AbstractDungeon.player != null) {
+            if (tokens.length < 2) {
+                return;
+            }
+            
+            if (tokens[1].equals("r") && tokens.length > 2) {
+                String[] relicNameArray = Arrays.copyOfRange(tokens, 2, tokens.length-1);
+                String relicName = String.join(" ", relicNameArray);
+                AbstractDungeon.player.loseRelic(relicName);
+            } else {
+                String[] relicNameArray = Arrays.copyOfRange(tokens, 1, tokens.length-1);
+                String relicName = String.join(" ", relicNameArray);
+                AbstractDungeon.getCurrRoom().spawnRelicAndObtain(Settings.WIDTH / 2, Settings.HEIGHT / 2, RelicLibrary.getRelic(tokens[1]).makeCopy());
+            }
+        }
     }
     
     public void receivePostInitialize() {
         consoleInputProcessor = new ConsoleInputProcessor();      
         
+        // Console font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/FantasqueSansMono/FantasqueSansMono-Regular.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = (int) (CONSOLE_TEXT_SIZE * Settings.scale);
@@ -69,21 +97,23 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
         generator.dispose();
     }
     
-    public void receivePostRender() {
-        if (visible && consoleFont != null) {
+    public void receivePostRender(SpriteBatch sb) {
+        if (visible && consoleFont != null) {       
+            // Since we need a shape renderer, need to end then restart the SpriteBatch
+            // Should probably just make a background texture for the console so this doesn't need to be done
+            sb.end();
+            
             ShapeRenderer consoleBackground = new ShapeRenderer();
             consoleBackground.begin(ShapeType.Filled);
             consoleBackground.setColor(consoleColor);
             consoleBackground.rect(CONSOLE_X, CONSOLE_Y, (CONSOLE_W * Settings.scale), (CONSOLE_H * Settings.scale));
             consoleBackground.end();
             
+            sb.begin();
+            
             float x = (CONSOLE_X + (CONSOLE_PAD_X * Settings.scale));
             float y = (CONSOLE_Y + (float) Math.floor(CONSOLE_TEXT_SIZE * Settings.scale));
-            
-            SpriteBatch consoleTextBatch = new SpriteBatch();
-            consoleTextBatch.begin();
-            consoleFont.draw(consoleTextBatch, currentText, x, y);
-            consoleTextBatch.end();
+            consoleFont.draw(sb, currentText, x, y);
         }
     }
     
@@ -98,8 +128,13 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
         }
         
         if (Gdx.input.isKeyJustPressed(toggleKey)) {
-            if (visible) currentText = "";
-            Gdx.input.setInputProcessor(visible ? null : consoleInputProcessor);
+            if (visible) {
+                currentText = "";
+            } else {
+                otherInputProcessor = Gdx.input.getInputProcessor();
+            }
+            
+            Gdx.input.setInputProcessor(visible ? otherInputProcessor : consoleInputProcessor);
             visible = !visible;
         }
     }

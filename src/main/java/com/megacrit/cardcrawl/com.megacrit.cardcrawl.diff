@@ -1,6 +1,6 @@
 diff -ru src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java
 --- src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java	2018-01-19 20:30:39.812725800 -0800
-+++ src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java	2018-01-19 20:29:55.556500700 -0800
++++ src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java	2018-01-21 01:09:49.853437200 -0800
 @@ -113,6 +113,9 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -33,38 +33,93 @@ diff -ru src/main/java/com/megacrit/cardcrawl/core/CardCrawlGame.java src/main/j
          }
          p2.flush();
      }
-@@ -372,6 +378,9 @@
-                 this.sb.draw(ImageMaster.WHITE_SQUARE_IMG, (float)Settings.WIDTH, 0.0f, (float)Settings.VERT_LETTERBOX_AMT, (float)Settings.HEIGHT);
+@@ -340,6 +346,10 @@
+                 }
              }
-             this.sb.end();
+             DrawMaster.draw(this.sb);
 +            
 +            // BaseMod hook
-+            BaseMod.publishPostRender();
++            BaseMod.publishRender(sb);
++
+             if (CardCrawlGame.cardPopup.isOpen) {
+                 cardPopup.render(this.sb);
+             }
+@@ -371,7 +381,11 @@
+                 this.sb.draw(ImageMaster.WHITE_SQUARE_IMG, 0.0f, 0.0f, (float)(- Settings.VERT_LETTERBOX_AMT), (float)Settings.HEIGHT);
+                 this.sb.draw(ImageMaster.WHITE_SQUARE_IMG, (float)Settings.WIDTH, 0.0f, (float)Settings.VERT_LETTERBOX_AMT, (float)Settings.HEIGHT);
+             }
+-            this.sb.end();
++            
++            // BaseMod hook
++            BaseMod.publishPostRender(sb);
++            
++            this.sb.end(); 
          }
          catch (Exception e) {
              ExceptionHandler.handleException(e, logger);
-@@ -505,7 +514,10 @@
+@@ -505,7 +519,7 @@
          mysteryMachine = 0;
      }
  
 -    public void update() {
 +    public void update() {    
-+        // BaseMod hook
-+        BaseMod.publishPreUpdate();
-+        
          cursor.update();
          screenShake.update(viewport);
          if (mode != GameMode.SPLASH) {
-@@ -656,6 +668,9 @@
-         if (Settings.isInfo) {
-             this.fpsLogger.log();
+@@ -532,6 +546,10 @@
+             this.displayCursor = !this.displayCursor;
          }
+         InputHelper.updateFirst();
 +        
 +        // BaseMod hook
++        BaseMod.publishPreUpdate();
++        
+         if (CardCrawlGame.cardPopup.isOpen) {
+             cardPopup.update();
+         }
+@@ -650,7 +668,11 @@
+             default: {
+                 logger.info("Unknown Game Mode: " + mode.name());
+             }
+-        }
++        }      
++
++        // BaseMod hook
 +        BaseMod.publishPostUpdate();
-     }
++        
+         this.updateDebugSwitch();
+         InputHelper.updateLast();
+         if (Settings.isInfo) {
+diff -ru src/main/java/com/megacrit/cardcrawl/ui/buttons/CancelButton.java src/main/java/com/megacrit/cardcrawl/ui/buttons/CancelButton.java
+--- src/main/java/com/megacrit/cardcrawl/ui/buttons/CancelButton.java	2018-01-21 01:02:58.518447800 -0800
++++ src/main/java/com/megacrit/cardcrawl/ui/buttons/CancelButton.java	2018-01-21 03:51:12.472275000 -0800
+@@ -29,6 +29,9 @@
+ import com.megacrit.cardcrawl.screens.stats.StatsScreen;
+ import com.megacrit.cardcrawl.screens.trial.TrialScreen;
  
-     private void loadPostCombat(SaveFile saveFile) {
++// BaseModm imports
++import basemod.BaseMod;
++
+ public class CancelButton {
+     private static final UIStrings uiStrings = CardCrawlGame.languagePack.getUIString("Cancel Button");
+     public static final String[] TEXT = CancelButton.uiStrings.TEXT;
+@@ -95,6 +98,16 @@
+                         this.hide();
+                         return;
+                     }
++                    
++                    // BaseMod modification
++                    if (BaseMod.modSettingsUp) {
++                        BaseMod.modSettingsUp = false;
++                        //CardCrawlGame.mainMenuScreen.lighten();
++                        //CardCrawlGame.mainMenuScreen.screen = MainMenuScreen.CurScreen.MAIN_MENU;
++                        hide();
++                        return;
++                    }
++                    
+                     if (this.buttonText.equals(TEXT[0])) {
+                         return;
+                     }
 diff -ru src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java
 --- src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java	2018-01-19 20:30:45.726395900 -0800
 +++ src/main/java/com/megacrit/cardcrawl/ui/buttons/EndTurnButton.java	2018-01-19 21:16:48.864194100 -0800
