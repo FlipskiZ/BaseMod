@@ -15,9 +15,14 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.*;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
+import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.actions.common.*;
 import java.util.Arrays;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class DevConsole implements PostInitializeSubscriber, PostRenderSubscriber, PostUpdateSubscriber {    
+    public static final Logger logger = LogManager.getLogger(BaseMod.class.getName());
     private static final float CONSOLE_X = 75.0f;
     private static final float CONSOLE_Y = 75.0f;
     private static final float CONSOLE_W = 800.0f;
@@ -57,6 +62,10 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
                 cmdRelic(tokens);
                 break;
             }
+			case "card": {
+                cmdCard(tokens);
+                break;
+            }
             case "info": {
                 Settings.isInfo = !Settings.isInfo;
                 break;
@@ -70,19 +79,56 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
     
     private static void cmdRelic(String[] tokens) {
         if (AbstractDungeon.player != null) {
-            if (tokens.length < 2) {
+            if (tokens.length < 3) {
                 return;
             }
             
             if (tokens[1].equals("r") && tokens.length > 2) {
-                String[] relicNameArray = Arrays.copyOfRange(tokens, 2, tokens.length-1);
+                String[] relicNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
                 String relicName = String.join(" ", relicNameArray);
                 AbstractDungeon.player.loseRelic(relicName);
-            } else {
-                String[] relicNameArray = Arrays.copyOfRange(tokens, 1, tokens.length-1);
+            } else if (tokens[1].equals("add") && tokens.length > 2) {
+                String[] relicNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
                 String relicName = String.join(" ", relicNameArray);
-                AbstractDungeon.getCurrRoom().spawnRelicAndObtain(Settings.WIDTH / 2, Settings.HEIGHT / 2, RelicLibrary.getRelic(tokens[1]).makeCopy());
+                AbstractDungeon.getCurrRoom().spawnRelicAndObtain(Settings.WIDTH / 2, Settings.HEIGHT / 2, RelicLibrary.getRelic(relicName).makeCopy());
             }
+        }
+    }
+	
+	private static void cmdCard(String[] tokens) {
+        if (AbstractDungeon.player != null) {
+            if (tokens.length < 3) {
+                return;
+            }
+			logger.info("" + String.join(" ", tokens));
+			logger.info("" + tokens[1]);
+            
+            if (tokens[1].equals("add") && tokens.length > 2) {
+                String[] cardNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
+                String cardName = String.join(" ", cardNameArray);
+				logger.info("" + cardName);
+                AbstractCard c = CardLibrary.getCard(cardName);
+				if (c != null) {
+					c = c.makeCopy();
+					AbstractDungeon.actionManager.addToBottom(new MakeTempCardInHandAction(c, true));
+				}
+            } else if (tokens[1].equals("r") && tokens.length > 2){
+				String[] cardNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
+                String cardName = String.join(" ", cardNameArray);
+				logger.info("" + cardName);
+				
+				boolean removed = false;
+				AbstractCard toRemove = null;
+				for (AbstractCard c : AbstractDungeon.player.hand.group) {
+					logger.info("" + c.cardID);
+					if(removed) break;
+					if(c.cardID.equals(cardName)){
+						toRemove = c;
+						removed = true;
+					}
+				}
+				if(removed) AbstractDungeon.player.hand.moveToExhaustPile(toRemove);
+			}
         }
     }
     
