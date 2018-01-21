@@ -23,13 +23,19 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 
 ## For Modders ##
 ### Hooks ###
-* PostInitialize -
-* Render -
-* PostRender -
-* PreUpdate -
-* PostUpdate -
+#### Subscription handling ####
+* BaseMod.subscribeTo...()
+* BaseMod.unsubscribeFrom...()
+
+#### Subscriptions ####
+* PostInitialize() - One time only, at the end of CardCrawlGame.initialize()
+* Render(SpriteBatch) - Under tips and the cursor, above everything else
+* PostRender(SpriteBatch) - Above everything
+* PreUpdate() - Immediately after input is handled
+* PostUpdate() - Immediately before input is disposed
 
 ### Mod Badges ###
+Currently only has full support for the badges themselves. Clicking any will open the BaseMod settings page for now.
 * BaseMod.registerModBadge(Texture texture, String modName, String author, String description)
 
 ## Changelog ##
