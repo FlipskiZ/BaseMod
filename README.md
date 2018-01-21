@@ -28,11 +28,12 @@ Default hotkey is `` ` ``, can be changed from BaseMod's settings screen.
 * BaseMod.unsubscribeFrom...()
 
 #### Subscriptions ####
-* PostInitialize() - One time only, at the end of CardCrawlGame.initialize()
-* Render(SpriteBatch) - Under tips and the cursor, above everything else
-* PostRender(SpriteBatch) - Above everything
-* PreUpdate() - Immediately after input is handled
-* PostUpdate() - Immediately before input is disposed
+Implement the appropriate interface (ex. `PostInitializeSubscribe`)
+* receivePostInitialize() - One time only, at the end of `CardCrawlGame.initialize()`
+* receiveRender(SpriteBatch) - Under tips and the cursor, above everything else
+* receivePostRender(SpriteBatch) - Above everything
+* receivePreUpdate() - Immediately after input is handled
+* receivePostUpdate() - Immediately before input is disposed
 
 ### Mod Badges ###
 Currently only has full support for the badges themselves. Clicking any will open the BaseMod settings page for now.
