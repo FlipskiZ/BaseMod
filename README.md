@@ -23,7 +23,15 @@ Default hotkey is '`', can be changed from BaseMod's settings screen.
 `relic r [id]` lose relic
 
 ## For Modders ##
-* Inset info about hooks here...
+### Hooks ###
+* PostInitialize -
+* Render -
+* PostRender -
+* PreUpdate -
+* PostUpdate -
+
+### Mod Badges ###
+* BaseMod.registerModBadge(Texture texture, String modName, String author, String description)
 
 ## Changelog ##
 #### v1.0.0 ####
@@ -35,6 +43,10 @@ Default hotkey is '`', can be changed from BaseMod's settings screen.
 
 #### v1.1.0 ####
 * Add mod badges
-* Add support for mod settings screens
+* Add initial support for mod settings screens
 * Add `relic` console command
 * Add option to change console keybind to BaseMod settings screen
+
+#### v1.1.1 #####
+* Scale mod badges by Settings.scale
+* Scale mod settings screens by Settings.scale

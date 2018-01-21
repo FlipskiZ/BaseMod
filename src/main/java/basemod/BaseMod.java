@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 public class BaseMod {
     public static final Logger logger = LogManager.getLogger(BaseMod.class.getName());
     
+    private static final int BADGES_PER_ROW = 16;
     private static final float BADGES_X = 640.0f;
     private static final float BADGES_Y = 250.0f;
     public static final float BADGE_W = 40.0f;
@@ -49,14 +50,14 @@ public class BaseMod {
     //
     // Mod badges
     //
-    public static void registerModBadge(Texture t, String name, String author, String version) {
+    public static void registerModBadge(Texture t, String name, String author, String desc) {
         int modBadgeCount = modBadges.size();
-        int col = (modBadgeCount%16);
-        int row = (modBadgeCount/16);
-        float x = BADGES_X + (col*BADGE_W);
-        float y = BADGES_Y - (row*BADGE_H);
+        int col = (modBadgeCount%BADGES_PER_ROW);
+        int row = (modBadgeCount/BADGES_PER_ROW);
+        float x = (BADGES_X*Settings.scale) + (col*BADGE_W*Settings.scale);
+        float y = (BADGES_Y*Settings.scale) - (row*BADGE_H*Settings.scale);
         
-        ModBadge badge = new ModBadge(t, x, y, name, author, version);
+        ModBadge badge = new ModBadge(t, x, y, name, author, desc);
         modBadges.add(badge);
     }
     
@@ -68,7 +69,7 @@ public class BaseMod {
     public static void publishPostInitialize() {
         // BaseMod post initialize handling
         Texture badgeTexture = new Texture(Gdx.files.internal("img/badge.png"));
-        registerModBadge(badgeTexture, "BaseMod", "t-larson", "v1.0.2 NL Provides hooks and a console");
+        registerModBadge(badgeTexture, "BaseMod", "t-larson", "v1.1.1 NL Provides hooks and a console");
         
         // Publish
         for (PostInitializeSubscriber sub : postInitializeSubscribers) {

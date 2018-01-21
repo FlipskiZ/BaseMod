@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.InputHelper;
@@ -30,7 +31,7 @@ public class ModButton {
         y = yPos;
         w = texture.getWidth();
         h = texture.getHeight();
-        hb = new Hitbox(x+HB_SHRINK, y+HB_SHRINK, w-(2*HB_SHRINK), h-(2*HB_SHRINK));
+        hb = new Hitbox(x+(HB_SHRINK*Settings.scale), y+(HB_SHRINK*Settings.scale), (w-(2*HB_SHRINK))*Settings.scale, (h-(2*HB_SHRINK))*Settings.scale);
         
         parent = p;
         click = c;
@@ -38,7 +39,7 @@ public class ModButton {
     
     public void render(SpriteBatch sb) {
         sb.setColor(Color.WHITE); 
-        sb.draw(texture, x, y);
+        sb.draw(texture, x, y, w*Settings.scale, h*Settings.scale);
         hb.render(sb);
     }
     

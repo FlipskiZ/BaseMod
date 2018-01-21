@@ -28,7 +28,7 @@ public class ModPanel {
         texture = new Texture(Gdx.files.internal("img/ModPanelBg.png"));
         consoleKeyLabel = "Change console hotkey (" + Keys.toString(DevConsole.toggleKey) + ")";
         
-        consoleKeyButton = new ModButton(350.0f, 650.0f, this, (me) -> {       
+        consoleKeyButton = new ModButton(350.0f*Settings.scale, 650.0f*Settings.scale, this, (me) -> {       
             waitingOnKey = true;
             oldInputProcessor = Gdx.input.getInputProcessor();
             Gdx.input.setInputProcessor(new InputAdapter() {
@@ -55,7 +55,7 @@ public class ModPanel {
     }
     
     private void renderText(SpriteBatch sb) {
-        FontHelper.renderFontLeftDownAligned(sb, FontHelper.buttonLabelFont, consoleKeyLabel, 475.0f, 700.0f, Color.WHITE);
+        FontHelper.renderFontLeftDownAligned(sb, FontHelper.buttonLabelFont, consoleKeyLabel, 475.0f*Settings.scale, 700.0f*Settings.scale, Color.WHITE);
     }
     
     private void renderButtons(SpriteBatch sb) {

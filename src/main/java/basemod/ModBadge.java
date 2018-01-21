@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.InputHelper;
 import com.megacrit.cardcrawl.helpers.TipHelper;
@@ -40,7 +41,7 @@ public class ModBadge implements RenderSubscriber, PreUpdateSubscriber {
         w = t.getWidth();
         h = t.getHeight();
         
-        hb = new Hitbox(x, y, w, h);
+        hb = new Hitbox(x, y, w*Settings.scale, h*Settings.scale);
         modPanel = new ModPanel();
         
         BaseMod.subscribeToRender(this);
@@ -50,7 +51,7 @@ public class ModBadge implements RenderSubscriber, PreUpdateSubscriber {
     public void receiveRender(SpriteBatch sb) {
         if (CardCrawlGame.mainMenuScreen != null && CardCrawlGame.mainMenuScreen.screen == MainMenuScreen.CurScreen.MAIN_MENU && !EarlyAccessPopup.isUp && !BaseMod.modSettingsUp) { 
             sb.setColor(Color.WHITE); 
-            sb.draw(texture, x, y);
+            sb.draw(texture, x, y, w*Settings.scale, h*Settings.scale);
             hb.render(sb);
         } else if (modPanel.isUp) {
             modPanel.render(sb);
