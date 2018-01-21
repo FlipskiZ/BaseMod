@@ -62,7 +62,7 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
                 cmdRelic(tokens);
                 break;
             }
-			case "card": {
+            case "card": {
                 cmdCard(tokens);
                 break;
             }
@@ -94,41 +94,41 @@ public class DevConsole implements PostInitializeSubscriber, PostRenderSubscribe
             }
         }
     }
-	
-	private static void cmdCard(String[] tokens) {
+    
+    private static void cmdCard(String[] tokens) {
         if (AbstractDungeon.player != null) {
             if (tokens.length < 3) {
                 return;
             }
-			logger.info("" + String.join(" ", tokens));
-			logger.info("" + tokens[1]);
+            logger.info("" + String.join(" ", tokens));
+            logger.info("" + tokens[1]);
             
             if (tokens[1].equals("add") && tokens.length > 2) {
                 String[] cardNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
                 String cardName = String.join(" ", cardNameArray);
-				logger.info("" + cardName);
+                logger.info("" + cardName);
                 AbstractCard c = CardLibrary.getCard(cardName);
-				if (c != null) {
-					c = c.makeCopy();
-					AbstractDungeon.actionManager.addToBottom(new MakeTempCardInHandAction(c, true));
-				}
+                if (c != null) {
+                    c = c.makeCopy();
+                    AbstractDungeon.actionManager.addToBottom(new MakeTempCardInHandAction(c, true));
+                }
             } else if (tokens[1].equals("r") && tokens.length > 2){
-				String[] cardNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
+                String[] cardNameArray = Arrays.copyOfRange(tokens, 2, tokens.length);
                 String cardName = String.join(" ", cardNameArray);
-				logger.info("" + cardName);
-				
-				boolean removed = false;
-				AbstractCard toRemove = null;
-				for (AbstractCard c : AbstractDungeon.player.hand.group) {
-					logger.info("" + c.cardID);
-					if(removed) break;
-					if(c.cardID.equals(cardName)){
-						toRemove = c;
-						removed = true;
-					}
-				}
-				if(removed) AbstractDungeon.player.hand.moveToExhaustPile(toRemove);
-			}
+                logger.info("" + cardName);
+                
+                boolean removed = false;
+                AbstractCard toRemove = null;
+                for (AbstractCard c : AbstractDungeon.player.hand.group) {
+                    logger.info("" + c.cardID);
+                    if(removed) break;
+                    if(c.cardID.equals(cardName)){
+                        toRemove = c;
+                        removed = true;
+                    }
+                }
+                if(removed) AbstractDungeon.player.hand.moveToExhaustPile(toRemove);
+            }
         }
     }
     
